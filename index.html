@@ -1,522 +1,207 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#030712">
-<title>MAX AI | Personal Assistant</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07111f">
+<title>MAX AI — Personal Assistant</title>
 <style>
-* {
-  box-sizing: border-box;
-}
-
-:root {
-  --blue: #00d9ff;
-  --bg: #030712;
-  --panel: rgba(8, 25, 43, 0.85);
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  background:
-    radial-gradient(ellipse at top, #09223b 0%, #030712 60%);
-  color: #e7faff;
-  font-family: Arial, sans-serif;
-}
-
-header {
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #12354c;
-}
-
-.logo {
-  color: var(--blue);
-  font-size: 25px;
-  font-weight: bold;
-  letter-spacing: 5px;
-  text-shadow: 0 0 15px #00d9ff88;
-}
-
-.status {
-  font-size: 11px;
-  color: #6cffbd;
-}
-
-main {
-  max-width: 650px;
-  margin: auto;
-  padding: 20px;
-}
-
-.subtitle {
-  text-align: center;
-  color: #79a9c7;
-  font-size: 12px;
-  letter-spacing: 3px;
-  margin-top: 18px;
-}
-
-.core {
-  width: 190px;
-  height: 190px;
-  margin: 28px auto 15px;
-  border: 1px solid #00d9ff;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 20px #00d9ff22,
-              inset 0 0 30px #00d9ff19;
-  position: relative;
-}
-
-.core::before,
-.core::after {
-  content: "";
-  position: absolute;
-  inset: 12px;
-  border: 2px dashed #00d9ff77;
-  border-radius: 50%;
-  animation: spin 15s linear infinite;
-}
-
-.core::after {
-  inset: 25px;
-  border-style: solid;
-  border-color: #00d9ff99 transparent;
-  animation-duration: 7s;
-  animation-direction: reverse;
-}
-
-.core.listening {
-  box-shadow: 0 0 50px #00d9ff77,
-              inset 0 0 40px #00d9ff33;
-}
-
-.core.listening::before {
-  animation-duration: 2s;
-}
-
-.core-icon {
-  font-size: 55px;
-  z-index: 1;
-  text-shadow: 0 0 25px #00d9ff;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-#statusText {
-  text-align: center;
-  color: var(--blue);
-  font-size: 13px;
-  min-height: 20px;
-}
-
-.clock {
-  text-align: center;
-  color: #779bb4;
-  font-size: 12px;
-  margin: 10px 0 25px;
-}
-
-.panel {
-  border: 1px solid #16435a;
-  background: var(--panel);
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.panel-title {
-  padding: 15px;
-  border-bottom: 1px solid #16435a;
-  color: var(--blue);
-  font-size: 12px;
-  letter-spacing: 2px;
-}
-
-#chat {
-  padding: 15px;
-  height: 230px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.message {
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 14px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-.max {
-  background: #0c2539;
-  border-left: 2px solid var(--blue);
-  align-self: flex-start;
-  max-width: 90%;
-}
-
-.user {
-  background: #07394a;
-  border-right: 2px solid #6cffbd;
-  align-self: flex-end;
-  max-width: 90%;
-}
-
-.controls {
-  display: flex;
-  gap: 8px;
-  padding: 12px;
-  border-top: 1px solid #16435a;
-}
-
-input {
-  min-width: 0;
-  flex: 1;
-  background: #020b16;
-  border: 1px solid #16435a;
-  color: white;
-  padding: 13px;
-  border-radius: 9px;
-  outline: none;
-}
-
-input:focus {
-  border-color: var(--blue);
-}
-
-button {
-  cursor: pointer;
-  border: 1px solid #00d9ff88;
-  background: #06263a;
-  color: var(--blue);
-  padding: 12px;
-  border-radius: 9px;
-  font-weight: bold;
-}
-
-button:active {
-  background: #104761;
-}
-
-.send {
-  padding-inline: 16px;
-}
-
-.tools {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.tools button {
-  font-size: 12px;
-}
-
-footer {
-  text-align: center;
-  color: #54748c;
-  font-size: 11px;
-  padding: 22px 10px;
-}
-
-@media (max-width: 380px) {
-  .core {
-    width: 160px;
-    height: 160px;
-  }
-
-  header {
-    padding: 15px;
-  }
-
-  main {
-    padding: 13px;
-  }
-}
+:root{--bg:#07111f;--panel:#0d1b2d;--panel2:#10233a;--line:#1e4261;--cyan:#54e7ff;--blue:#438cff;--text:#eaf7ff;--muted:#91a9bf;--user:#123b5a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#102b48 0%,var(--bg) 55%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+.app{max-width:980px;margin:auto;padding:18px;display:flex;flex-direction:column;min-height:100vh}
+header{display:flex;align-items:center;gap:13px;padding:10px 4px 18px;border-bottom:1px solid var(--line)}
+.logo{width:54px;height:54px;border:2px solid var(--cyan);border-radius:16px;display:grid;place-items:center;color:var(--cyan);font-weight:900;font-size:25px;box-shadow:0 0 22px #54e7ff26}
+h1{font-size:23px;letter-spacing:3px;margin:0}.sub{color:var(--muted);font-size:12px}.status{margin-left:auto;display:flex;align-items:center;gap:7px;color:#8af5c6;font-size:12px}.dot{width:8px;height:8px;background:#43e6a1;border-radius:50%;box-shadow:0 0 10px #43e6a1}
+.hero{padding:22px 4px 14px}.hero h2{margin:0 0 5px;font-size:clamp(22px,4vw,32px)}.hero p{margin:0;color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.chip{border:1px solid var(--line);background:#0d1b2d;color:#ccefff;border-radius:999px;padding:7px 12px;font-size:13px;cursor:pointer}
+.chat{flex:1;min-height:300px;background:#081625bd;border:1px solid var(--line);border-radius:18px;padding:16px;overflow:auto;max-height:58vh}
+.msg{max-width:88%;padding:12px 14px;border-radius:15px;margin:10px 0;white-space:pre-wrap;overflow-wrap:anywhere}.assistant{background:var(--panel2);border:1px solid #1a3b57;border-top-left-radius:4px}.user{background:var(--user);border:1px solid #28618b;margin-left:auto;border-top-right-radius:4px}.label{font-size:10px;letter-spacing:1px;color:var(--cyan);margin-bottom:4px;font-weight:700}.user .label{color:#a6d3ff}
+.composer{margin-top:12px;background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:10px;display:flex;gap:9px;align-items:flex-end}.composer textarea{flex:1;resize:vertical;min-height:44px;max-height:140px;background:transparent;border:0;outline:none;color:var(--text);font:inherit;padding:10px}.btn{border:1px solid var(--line);background:#102b45;color:var(--text);border-radius:12px;min-width:44px;min-height:44px;padding:9px 13px;cursor:pointer;font-weight:650}.btn.primary{background:linear-gradient(135deg,#1378d5,#2464ff);border-color:#439dff}.btn:disabled{opacity:.55;cursor:wait}.btn.mic{font-size:19px}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.small{font-size:12px;color:var(--muted);margin:12px 4px 0}.typing{color:var(--muted);font-style:italic;padding:8px}.footer{color:#69859e;font-size:11px;text-align:center;padding:18px 0 5px}
+@media(max-width:560px){.app{padding:12px}.logo{width:46px;height:46px}h1{font-size:20px}.chat{max-height:56vh;padding:10px}.msg{max-width:96%}.composer{gap:5px}.btn{padding:8px 10px}}
 </style>
 </head>
-
 <body>
-
+<div class="app">
 <header>
-  <div class="logo">MAX AI</div>
-  <div class="status">● SYSTEM ONLINE</div>
+  <div class="logo">M</div>
+  <div><h1>MAX AI</h1><div class="sub">PERSONAL AI ASSISTANT · GEMINI POWERED</div></div>
+  <div class="status"><span class="dot"></span><span id="statusText">Ready</span></div>
 </header>
-
-<main>
-  <div class="subtitle">PERSONAL INTELLIGENCE SYSTEM</div>
-
-  <div class="core" id="core">
-    <div class="core-icon">✧</div>
+<section class="hero">
+  <h2>Your assistant is online.</h2>
+  <p>Ask a question, type a command, or use your microphone.</p>
+  <div class="chips">
+    <button class="chip" data-prompt="Tell me a fun fact.">✨ Fun fact</button>
+    <button class="chip" data-prompt="Tell me a joke.">😄 Tell a joke</button>
+    <button class="chip" data-prompt="Help me plan my day.">📅 Plan my day</button>
+    <button class="chip" data-prompt="Recommend an anime for me.">🎌 Anime ideas</button>
   </div>
-
-  <div id="statusText">MAX is ready for you.</div>
-  <div class="clock" id="clock">Initializing system...</div>
-
-  <section class="panel">
-    <div class="panel-title">◈ COMMUNICATION TERMINAL</div>
-
-    <div id="chat" aria-live="polite">
-      <div class="message max">
-        Hello! I am MAX, your personal assistant. 🚀<br><br>
-        You can type a message or try the microphone.
-        My AI brain will be connected in the next step.
-      </div>
-    </div>
-
-    <form class="controls" id="chatForm">
-      <input id="userInput"
-        type="text"
-        placeholder="Talk to MAX..."
-        autocomplete="off"
-        aria-label="Message for MAX">
-      <button class="send" type="submit">SEND</button>
-    </form>
-  </section>
-
-  <div class="tools">
-    <button id="micBtn">🎙️ MIC</button>
-    <button id="speakBtn">🔊 VOICE ON</button>
-    <button id="clearBtn">✕ CLEAR</button>
-  </div>
+</section>
+<main class="chat" id="chat" aria-live="polite">
+  <div class="msg assistant"><div class="label">MAX</div>Hey! I'm MAX, your AI assistant. What shall we do today?</div>
 </main>
-
-<footer>
-  MAX AI v1.0 · PERSONAL ASSISTANT<br>
-  AI INTERNET CONNECTION NOT YET CONFIGURED
-</footer>
-
+<div class="composer">
+  <textarea id="messageInput" rows="1" placeholder="Message MAX… (Enter to send)" aria-label="Message MAX"></textarea>
+  <button id="micBtn" class="btn mic" title="Voice input" aria-label="Voice input">🎙️</button>
+  <button id="sendBtn" class="btn primary">Send ➤</button>
+</div>
+<div class="controls">
+  <button id="voiceToggle" class="btn">🔊 Voice replies: On</button>
+  <button id="stopVoice" class="btn">⏹ Stop speaking</button>
+  <button id="clearBtn" class="btn">Clear chat</button>
+</div>
+<p class="small">Voice recognition depends on your browser and may require microphone permission. MAX can answer questions, but this webpage cannot directly control your phone or computer.</p>
+<div class="footer">MAX AI · Keep your API key private in Cloudflare, never in this page.</div>
+</div>
 <script>
-const chat = document.getElementById("chat");
-const input = document.getElementById("userInput");
-const core = document.getElementById("core");
-const statusText = document.getElementById("statusText");
+(() => {
+  // Your Cloudflare Worker endpoint. Do not put your Gemini API key in this file.
+  const API_URL = "https://max-ai-brain.harshithuppu329.workers.dev";
 
-let voiceEnabled = true;
-let recognition = null;
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("messageInput");
+  const sendBtn = document.getElementById("sendBtn");
+  const micBtn = document.getElementById("micBtn");
+  const statusText = document.getElementById("statusText");
+  const voiceToggle = document.getElementById("voiceToggle");
+  let voiceEnabled = true;
+  let recognition = null;
+  let isListening = false;
 
-function updateClock() {
-  document.getElementById("clock").textContent =
-    new Date().toLocaleString([], {
-      weekday: "short",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit"
-    });
-}
-
-setInterval(updateClock, 1000);
-updateClock();
-
-function addMessage(text, sender) {
-  const div = document.createElement("div");
-  div.className = "message " + sender;
-  div.textContent = text;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-}
-
-function speak(text) {
-  if (!voiceEnabled || !("speechSynthesis" in window)) return;
-
-  window.speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-IN";
-  utterance.rate = 1;
-  utterance.pitch = 1.05;
-
-  utterance.onstart = () => {
-    core.classList.add("listening");
-    statusText.textContent = "MAX is speaking...";
-  };
-
-  utterance.onend = () => {
-    core.classList.remove("listening");
-    statusText.textContent = "MAX is ready for you.";
-  };
-
-  window.speechSynthesis.speak(utterance);
-}
-
-async function getReply(message) {
-  try {
-    const response = await fetch(
-      "https://max-ai-brain.harshithuppu329.workers.dev",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: message
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return "Sorry! My AI brain had a problem: " +
-        (data.error || "Please try again.");
-    }
-
-    return data.reply || "I couldn't generate a reply.";
-
-  } catch (error) {
-    return "I can't connect to my AI brain right now. Please check your internet connection.";
-  }
-} {
-  const text = message.toLowerCase().trim();
-
-  if (/^(hi|hello|hey)\b/.test(text)) {
-    return "Hey! Great to see you. What shall we do today?";
+  function addMessage(text, sender) {
+    const div = document.createElement("div");
+    div.className = "msg " + sender;
+    const label = document.createElement("div");
+    label.className = "label";
+    label.textContent = sender === "user" ? "YOU" : "MAX";
+    const body = document.createElement("div");
+    body.textContent = text;
+    div.append(label, body);
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+    return div;
   }
 
-  if (text.includes("your name") || text === "who are you") {
-    return "I am MAX, your personal AI assistant in development.";
-  }
-
-  if (text.includes("how are you")) {
-    return "My systems are running smoothly! How are you doing?";
-  }
-
-  if (text.includes("time")) {
-    return "The current time is " +
-      new Date().toLocaleTimeString();
-  }
-
-  if (text.includes("date") || text.includes("today")) {
-    return "Today's date is " +
-      new Date().toLocaleDateString();
-  }
-
-  if (text.includes("joke")) {
-    return "Why did the computer go to the doctor? Because it caught a virus!";
-  }
-
-  if (text.includes("anime")) {
-    return "Anime mode activated! Tell me which anime you want to discuss.";
-  }
-
-  if (text.includes("motivate") || text.includes("sad")) {
-    return "Remember, every expert was once a beginner. Take one small step today. I am here to help!";
-  }
-
-  if (text.includes("wake up max") || text === "max") {
-    return "I am awake and ready! What do you need?";
-  }
-
-  if (text.includes("help")) {
-    return "You can ask me about the time, date, jokes, anime, or just chat. Real AI connection is coming next.";
-  }
-
-  return "I heard you say: " + message +
-    ". My real AI brain is not connected yet. We will add it in the next version!";
-}
-
-function sendMessage(message) {
-  const clean = message.trim();
-  if (!clean) return;
-
-  addMessage(clean, "user");
-  input.value = "";
-
-  statusText.textContent = "MAX is thinking...";
-
-  setTimeout(() => {
-    const reply = getReply(clean);
-    addMessage(reply, "max");
-    speak(reply);
-
-    if (!voiceEnabled) {
-      statusText.textContent = "MAX is ready for you.";
-    }
-  }, 450);
-}
-
-document.getElementById("chatForm").addEventListener("submit", event => {
-  event.preventDefault();
-  sendMessage(input.value);
-});
-
-document.getElementById("speakBtn").addEventListener("click", event => {
-  voiceEnabled = !voiceEnabled;
-
-  event.currentTarget.textContent =
-    voiceEnabled ? "🔊 VOICE ON" : "🔇 VOICE OFF";
-
-  if (!voiceEnabled && "speechSynthesis" in window) {
+  function speak(text) {
+    if (!voiceEnabled || !("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-IN";
+    utterance.rate = 1;
+    utterance.pitch = 1.04;
+    utterance.onstart = () => statusText.textContent = "Speaking…";
+    utterance.onend = () => statusText.textContent = "Ready";
+    window.speechSynthesis.speak(utterance);
   }
 
-  statusText.textContent =
-    voiceEnabled ? "Voice responses enabled." : "Voice responses disabled.";
-});
+  async function getReply(message) {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message })
+    });
+    let data;
+    try { data = await response.json(); }
+    catch { throw new Error("The AI server returned an unreadable response."); }
+    if (!response.ok) throw new Error(data.error || "AI request failed (" + response.status + ").");
+    if (!data.reply) throw new Error("MAX received an empty reply. Please try again.");
+    return data.reply;
+  }
 
-document.getElementById("clearBtn").addEventListener("click", () => {
-  chat.replaceChildren();
-  addMessage("Chat cleared. MAX is ready!", "max");
-  statusText.textContent = "MAX is ready for you.";
-});
-
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-
-if (SpeechRecognition) {
-  recognition = new SpeechRecognition();
-  recognition.lang = "en-IN";
-  recognition.continuous = false;
-  recognition.interimResults = false;
-
-  recognition.onstart = () => {
-    core.classList.add("listening");
-    statusText.textContent = "Listening... speak now.";
-  };
-
-  recognition.onresult = event => {
-    const transcript = event.results[0][0].transcript;
-    statusText.textContent = "Voice received.";
-    sendMessage(transcript);
-  };
-
-  recognition.onerror = event => {
-    statusText.textContent =
-      event.error === "not-allowed"
-        ? "Microphone permission denied."
-        : "Voice unavailable. You can type instead.";
-    core.classList.remove("listening");
-  };
-
-  recognition.onend = () => {
-    core.classList.remove("listening");
-  };
-
-  document.getElementById("micBtn").addEventListener("click", () => {
+  async function sendMessage(text) {
+    const message = (text ?? input.value).trim();
+    if (!message || sendBtn.disabled) return;
+    addMessage(message, "user");
+    input.value = "";
+    input.style.height = "auto";
+    sendBtn.disabled = true;
+    micBtn.disabled = true;
+    statusText.textContent = "Thinking…";
+    const waiting = document.createElement("div");
+    waiting.className = "typing";
+    waiting.textContent = "MAX is thinking…";
+    chat.appendChild(waiting);
+    chat.scrollTop = chat.scrollHeight;
     try {
-      recognition.start();
+      const reply = await getReply(message);
+      waiting.remove();
+      addMessage(reply, "assistant");
+      speak(reply);
     } catch (error) {
-      statusText.textContent = "Please wait, then try the microphone again.";
+      waiting.remove();
+      addMessage("I couldn't connect to my AI brain. " + error.message + "\n\nCheck that your Cloudflare Worker is deployed, GEMINI_API_KEY is saved, and the Worker allows this website's origin.", "assistant");
+      statusText.textContent = "Connection issue";
+    } finally {
+      sendBtn.disabled = false;
+      micBtn.disabled = false;
+      if (!statusText.textContent.startsWith("Speaking")) statusText.textContent = "Ready";
+      input.focus();
+    }
+  }
+
+  sendBtn.addEventListener("click", () => sendMessage());
+  input.addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
     }
   });
-} else {
-  document.getElementById("micBtn").addEventListener("click", () => {
-    statusText.textContent =
-      "Voice input is unsupported in this browser. Try a supported browser or type instead.";
+  input.addEventListener("input", () => {
+    input.style.height = "auto";
+    input.style.height = Math.min(input.scrollHeight, 140) + "px";
   });
-}
+  document.querySelectorAll("[data-prompt]").forEach(button => {
+    button.addEventListener("click", () => sendMessage(button.dataset.prompt));
+  });
 
+  voiceToggle.addEventListener("click", () => {
+    voiceEnabled = !voiceEnabled;
+    voiceToggle.textContent = voiceEnabled ? "🔊 Voice replies: On" : "🔇 Voice replies: Off";
+    if (!voiceEnabled && "speechSynthesis" in window) window.speechSynthesis.cancel();
+  });
+  document.getElementById("stopVoice").addEventListener("click", () => {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    statusText.textContent = "Ready";
+  });
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    chat.replaceChildren();
+    addMessage("Chat cleared. I'm ready for a new conversation!", "assistant");
+  });
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = "en-IN";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.onstart = () => { isListening = true; micBtn.textContent = "⏺"; statusText.textContent = "Listening…"; };
+    recognition.onresult = event => {
+      const transcript = event.results[0][0].transcript;
+      input.value = transcript;
+      sendMessage(transcript);
+    };
+    recognition.onerror = event => {
+      statusText.textContent = event.error === "not-allowed" ? "Mic permission denied" : "Voice unavailable";
+    };
+    recognition.onend = () => {
+      isListening = false;
+      micBtn.textContent = "🎙️";
+      if (!sendBtn.disabled) statusText.textContent = "Ready";
+    };
+    micBtn.addEventListener("click", () => {
+      if (isListening) recognition.stop();
+      else {
+        try { recognition.start(); }
+        catch { statusText.textContent = "Please try again"; }
+      }
+    });
+  } else {
+    micBtn.addEventListener("click", () => {
+      addMessage("Voice input isn't supported in this browser. Try Chrome and allow microphone access, or type your message.", "assistant");
+    });
+    micBtn.title = "Voice input unsupported in this browser";
+  }
+})();
 </script>
 </body>
-  </html>
+</html>
