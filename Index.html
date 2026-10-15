@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#030712">
+<title>MAX AI | Personal Assistant</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --blue: #00d9ff;
+  --bg: #030712;
+  --panel: rgba(8, 25, 43, 0.85);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at top, #09223b 0%, #030712 60%);
+  color: #e7faff;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #12354c;
+}
+
+.logo {
+  color: var(--blue);
+  font-size: 25px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  text-shadow: 0 0 15px #00d9ff88;
+}
+
+.status {
+  font-size: 11px;
+  color: #6cffbd;
+}
+
+main {
+  max-width: 650px;
+  margin: auto;
+  padding: 20px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #79a9c7;
+  font-size: 12px;
+  letter-spacing: 3px;
+  margin-top: 18px;
+}
+
+.core {
+  width: 190px;
+  height: 190px;
+  margin: 28px auto 15px;
+  border: 1px solid #00d9ff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 20px #00d9ff22,
+              inset 0 0 30px #00d9ff19;
+  position: relative;
+}
+
+.core::before,
+.core::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 2px dashed #00d9ff77;
+  border-radius: 50%;
+  animation: spin 15s linear infinite;
+}
+
+.core::after {
+  inset: 25px;
+  border-style: solid;
+  border-color: #00d9ff99 transparent;
+  animation-duration: 7s;
+  animation-direction: reverse;
+}
+
+.core.listening {
+  box-shadow: 0 0 50px #00d9ff77,
+              inset 0 0 40px #00d9ff33;
+}
+
+.core.listening::before {
+  animation-duration: 2s;
+}
+
+.core-icon {
+  font-size: 55px;
+  z-index: 1;
+  text-shadow: 0 0 25px #00d9ff;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+#statusText {
+  text-align: center;
+  color: var(--blue);
+  font-size: 13px;
+  min-height: 20px;
+}
+
+.clock {
+  text-align: center;
+  color: #779bb4;
+  font-size: 12px;
+  margin: 10px 0 25px;
+}
+
+.panel {
+  border: 1px solid #16435a;
+  background: var(--panel);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.panel-title {
+  padding: 15px;
+  border-bottom: 1px solid #16435a;
+  color: var(--blue);
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+#chat {
+  padding: 15px;
+  height: 230px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message {
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.max {
+  background: #0c2539;
+  border-left: 2px solid var(--blue);
+  align-self: flex-start;
+  max-width: 90%;
+}
+
+.user {
+  background: #07394a;
+  border-right: 2px solid #6cffbd;
+  align-self: flex-end;
+  max-width: 90%;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #16435a;
+}
+
+input {
+  min-width: 0;
+  flex: 1;
+  background: #020b16;
+  border: 1px solid #16435a;
+  color: white;
+  padding: 13px;
+  border-radius: 9px;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--blue);
+}
+
+button {
+  cursor: pointer;
+  border: 1px solid #00d9ff88;
+  background: #06263a;
+  color: var(--blue);
+  padding: 12px;
+  border-radius: 9px;
+  font-weight: bold;
+}
+
+button:active {
+  background: #104761;
+}
+
+.send {
+  padding-inline: 16px;
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tools button {
+  font-size: 12px;
+}
+
+footer {
+  text-align: center;
+  color: #54748c;
+  font-size: 11px;
+  padding: 22px 10px;
+}
+
+@media (max-width: 380px) {
+  .core {
+    width: 160px;
+    height: 160px;
+  }
+
+  header {
+    padding: 15px;
+  }
+
+  main {
+    padding: 13px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">MAX AI</div>
+  <div class="status">● SYSTEM ONLINE</div>
+</header>
+
+<main>
+  <div class="subtitle">PERSONAL INTELLIGENCE SYSTEM</div>
+
+  <div class="core" id="core">
+    <div class="core-icon">✧</div>
+  </div>
+
+  <div id="statusText">MAX is ready for you.</div>
+  <div class="clock" id="clock">Initializing system...</div>
+
+  <section class="panel">
+    <div class="panel-title">◈ COMMUNICATION TERMINAL</div>
+
+    <div id="chat" aria-live="polite">
+      <div class="message max">
+        Hello! I am MAX, your personal assistant. 🚀<br><br>
+        You can type a message or try the microphone.
+        My AI brain will be connected in the next step.
+      </div>
+    </div>
+
+    <form class="controls" id="chatForm">
+      <input id="userInput"
+        type="text"
+        placeholder="Talk to MAX..."
+        autocomplete="off"
+        aria-label="Message for MAX">
+      <button class="send" type="submit">SEND</button>
+    </form>
+  </section>
+
+  <div class="tools">
+    <button id="micBtn">🎙️ MIC</button>
+    <button id="speakBtn">🔊 VOICE ON</button>
+    <button id="clearBtn">✕ CLEAR</button>
+  </div>
+</main>
+
+<footer>
+  MAX AI v1.0 · PERSONAL ASSISTANT<br>
+  AI INTERNET CONNECTION NOT YET CONFIGURED
+</footer>
+
+<script>
+const chat = document.getElementById("chat");
+const input = document.getElementById("userInput");
+const core = document.getElementById("core");
+const statusText = document.getElementById("statusText");
+
+let voiceEnabled = true;
+let recognition = null;
+
+function updateClock() {
+  document.getElementById("clock").textContent =
+    new Date().toLocaleString([], {
+      weekday: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+function addMessage(text, sender) {
+  const div = document.createElement("div");
+  div.className = "message " + sender;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function speak(text) {
+  if (!voiceEnabled || !("speechSynthesis" in window)) return;
+
+  window.speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-IN";
+  utterance.rate = 1;
+  utterance.pitch = 1.05;
+
+  utterance.onstart = () => {
+    core.classList.add("listening");
+    statusText.textContent = "MAX is speaking...";
+  };
+
+  utterance.onend = () => {
+    core.classList.remove("listening");
+    statusText.textContent = "MAX is ready for you.";
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
+function getReply(message) {
+  const text = message.toLowerCase().trim();
+
+  if (/^(hi|hello|hey)\b/.test(text)) {
+    return "Hey! Great to see you. What shall we do today?";
+  }
+
+  if (text.includes("your name") || text === "who are you") {
+    return "I am MAX, your personal AI assistant in development.";
+  }
+
+  if (text.includes("how are you")) {
+    return "My systems are running smoothly! How are you doing?";
+  }
+
+  if (text.includes("time")) {
+    return "The current time is " +
+      new Date().toLocaleTimeString();
+  }
+
+  if (text.includes("date") || text.includes("today")) {
+    return "Today's date is " +
+      new Date().toLocaleDateString();
+  }
+
+  if (text.includes("joke")) {
+    return "Why did the computer go to the doctor? Because it caught a virus!";
+  }
+
+  if (text.includes("anime")) {
+    return "Anime mode activated! Tell me which anime you want to discuss.";
+  }
+
+  if (text.includes("motivate") || text.includes("sad")) {
+    return "Remember, every expert was once a beginner. Take one small step today. I am here to help!";
+  }
+
+  if (text.includes("wake up max") || text === "max") {
+    return "I am awake and ready! What do you need?";
+  }
+
+  if (text.includes("help")) {
+    return "You can ask me about the time, date, jokes, anime, or just chat. Real AI connection is coming next.";
+  }
+
+  return "I heard you say: " + message +
+    ". My real AI brain is not connected yet. We will add it in the next version!";
+}
+
+function sendMessage(message) {
+  const clean = message.trim();
+  if (!clean) return;
+
+  addMessage(clean, "user");
+  input.value = "";
+
+  statusText.textContent = "MAX is thinking...";
+
+  setTimeout(() => {
+    const reply = getReply(clean);
+    addMessage(reply, "max");
+    speak(reply);
+
+    if (!voiceEnabled) {
+      statusText.textContent = "MAX is ready for you.";
+    }
+  }, 450);
+}
+
+document.getElementById("chatForm").addEventListener("submit", event => {
+  event.preventDefault();
+  sendMessage(input.value);
+});
+
+document.getElementById("speakBtn").addEventListener("click", event => {
+  voiceEnabled = !voiceEnabled;
+
+  event.currentTarget.textContent =
+    voiceEnabled ? "🔊 VOICE ON" : "🔇 VOICE OFF";
+
+  if (!voiceEnabled && "speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+
+  statusText.textContent =
+    voiceEnabled ? "Voice responses enabled." : "Voice responses disabled.";
+});
+
+document.getElementById("clearBtn").addEventListener("click", () => {
+  chat.replaceChildren();
+  addMessage("Chat cleared. MAX is ready!", "max");
+  statusText.textContent = "MAX is ready for you.";
+});
+
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.lang = "en-IN";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onstart = () => {
+    core.classList.add("listening");
+    statusText.textContent = "Listening... speak now.";
+  };
+
+  recognition.onresult = event => {
+    const transcript = event.results[0][0].transcript;
+    statusText.textContent = "Voice received.";
+    sendMessage(transcript);
+  };
+
+  recognition.onerror = event => {
+    statusText.textContent =
+      event.error === "not-allowed"
+        ? "Microphone permission denied."
+        : "Voice unavailable. You can type instead.";
+    core.classList.remove("listening");
+  };
+
+  recognition.onend = () => {
+    core.classList.remove("listening");
+  };
+
+  document.getElementById("micBtn").addEventListener("click", () => {
+    try {
+      recognition.start();
+    } catch (error) {
+      statusText.textContent = "Please wait, then try the microphone again.";
+    }
+  });
+} else {
+  document.getElementById("micBtn").addEventListener("click", () => {
+    statusText.textContent =
+      "Voice input is unsupported in this browser. Try a supported browser or type instead.";
+  });
+}
+
+</script>
+</body>
+  </html>
